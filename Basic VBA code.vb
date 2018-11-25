@@ -16,7 +16,7 @@ Dim r1, c1, r2, c2 As Integer
 
 Set dbsheet1 = ActiveWorkbook.Sheets("Sheet1")
 Set dbsheet2 = ActiveWorkbook.Sheets("Sheet2")
-
+            'To Calculate the number of rows and columns
 dbsheet1.Activate
 r1 = dbsheet1.Cells(Rows.Count, 1).End(xlUp).Row
 c1 = dbsheet1.Cells(1, Columns.Count).End(xlToLeft).Column
@@ -25,6 +25,8 @@ dbsheet2.Activate
 r2 = dbsheet2.Cells(Rows.Count, 1).End(xlUp).Row
 c2 = dbsheet2.Cells(1, Columns.Count).End(xlToLeft).Column
 
+
+'Copy paste functions
 Application.CutCopyMode = False
 dbsheet2.Range(Cells(1, 3), Cells(1, c2)).Copy
 dbsheet1.Activate
