@@ -1,0 +1,79 @@
+Dim WB1 As Worksheet, WB2 As Worksheet
+
+Sub Main()
+
+Application.DisplayAlerts = False
+
+r1 = Cells(Rows.Count, 1).End(xlUp).row
+
+For i = 2 To r1
+
+Table1 = Range(Cells(i, 1), Cells(i, 2))
+
+For Each x In Table1
+
+    If Count <> 1 Then
+        Count = 1
+        Actual = x
+  
+    Else
+        Obtained = x
+   
+    End If
+
+Next x
+Count = 0
+
+Call Openfile(Actual, Obtained, i)
+
+Next i
+
+End Sub
+
+Sub Openfile(ByVal Actual As String, ByVal Obtained As String, ByVal row As Integer)
+
+Dim Error As Integer
+Dim col As Integer
+
+Error = 0
+col = 4
+
+Set WB1 = Workbooks.Open(Obtained).Worksheets("Sheet1")
+Set WB2 = Workbooks.Open(Actual).Worksheets("Sheet1")
+
+ r1 = WB1.Cells(Rows.Count, 1).End(xlUp).row
+ c1 = WB1.Cells(1, Columns.Count).End(xlToLeft).Column
+ 
+    For i = 1 To r1
+        For j = 1 To c1
+            If WB1.Cells(i, j) = WB2.Cells(i, j) Then
+            GoTo Jumper
+            
+            Else
+            'MsgBox WB2.Cells(i, j).Value, vbExclamation, "Failed at " & i & "," & j
+            Error = Error + 1
+            col = col + 1
+            Cells(row, col).Value = "Cells(" & i & "," & j & ") = " & WB1.Cells(i, j).Value
+            WB1.Activate
+            WB1.Cells(i, j).Interior.Color = RGB(255, 255, 0)
+
+            End If
+Jumper:
+        Next j
+    Next i
+    
+    If Error = 0 Then
+    Cells(row, 3).Value = "Success"
+    Cells(row, 4).Value = 0
+    Else
+    Cells(row, 3).Value = "Failure"
+    Cells(row, 4).Value = Error
+    End If
+
+    WB1.Activate
+    ActiveWorkbook.Close SaveChanges:=True
+    WB2.Activate
+    ActiveWorkbook.Close SaveChanges:=True
+    
+End Sub
+
